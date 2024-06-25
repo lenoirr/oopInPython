@@ -31,14 +31,14 @@ class Employee:
     __slots__ = ("name","age","position","_salary","_annual_salary", "project") # SLOTS: optional feature to optimize memory allocation for new class instances (really important with alot of instances)
     # provides instances with faster attribute access
 
-    @classmethod
-    def new_employee(cls, name, dob, pos, project):     # alternative constructor
+    @classmethod    # for methods that do not do work on an instances of the class(static in C#)
+    def new_employee(cls, name, dob, pos, project):     # first parameter of ClassMethod is the class itself (cls) is short for class
         now = date.today()
         age = now.year - dob.year - ((now.month,now.day) < (dob.month, dob.day))
         return cls(name,age,pos,cls.minimum_wage,project)   #instantiates a new employee instance and returns it
 
-    @classmethod        # for methods that do not do work on an instances of the class(static in C#)
-    def change_minimum_wage(cls,new_wage):      # first parameter is the class itself cls is short for class
+    @classmethod        
+    def change_minimum_wage(cls,new_wage):      
         if new_wage > 3000:
             raise ValueError("Company can't afford that")
         else:
@@ -54,13 +54,13 @@ class Employee:
         self._annual_salary = None
         self.project = project
         
-    def __str__ (self):     # This function is called when print(class instance)
+    def __str__ (self):     # This function is called when print(class instance) - this is an override
         return f"\nEMPLOYEE DETAILS:{self.name} is {self.age} year old. Employee is a {self.position} with the salary of ${self._salary} and is working on {self.project}\n"
     
     def __repr__ (self):    # code used to return a string to create another instance - mine isn't working cuz I lazy
         return f"Employee({self.name},{self.age}, {self.position}, {self._salary})"
     
-    # ----------------------------------------------------------------------------------------PROPERTIES FOR INPUT AND OUTPUT VALIDATION AND SECURITY ---------------------------------------------------------------------#
+    # ---------------------------------------------------------PROPERTIES FOR INPUT AND OUTPUT VALIDATION AND SECURITY ---------------------------------------------------------------------#
     # Allows ability to program write validation and read trandformation. Also allows read only and write only variables - not shown here tho (look that shit up cuh)
 
     @property           # Property Decorator - GETTER FUNCTION makes this method act like a property (removes the need for () when calling)
@@ -84,7 +84,7 @@ class Employee:
     def increase_salary(self,percent):
         self._salary += self._salary * (percent/100)
 
-class SlotsInspectorMixin:  # mix in class used to be mixin into another last kinda like inheritance. 
+class SlotsInspectorMixin:  # mix in class used to be mixin into another class kinda like inheritance. 
     __slots__ = ()
     def has_slots(self):
         return hasattr(self,"__slots__")    # checks if this instance of the class uses slots
@@ -108,7 +108,7 @@ class Developer(SlotsInspectorMixin, Employee): # order here matters with inheri
     def test_def (val):
         print(val)
 
-employee1_project = Project("Misinformation Media", "Propaganda", "U.S. Government")
+employee1_project = Project("Misinformation Media", "Propaganda", "U.S. Government")    #creating a new instance of the class project. 
 employee1 = Developer("Ryan Lenoir", 22, "Engineer", 120000, employee1_project,"Flask")
 employee2 = Tester("Gage Elenbass",69,"Engineer", 10000, employee1_project)
 
@@ -123,19 +123,19 @@ print("Hello World!")
 
 #print(employee1)
 #print(employee1.__dict__)      # should return an error if this instance is only relying on slots
-#print(employee1.has_slots())
+#print(employee1.has_slots())    # using inherited class method
 #print(Developer.__mro__)# returns the method resoltuion order (order in which methods will be searched for inside this inheritence tree)
 
 
-# MMLLC FUNCTIONALITY THAT IS WEIRD TO ME
-#Developer.test_def(3)   # not performing work on an instance of the class at all - which I guess is fine for grouping of function in some cases?
+#Developer.test_def(3)   
 #Employee.change_minimum_wage(2000)
 #print (Employee.minimum_wage)
 
-# e = Employee.new_employee("Mary",date(1991,8,12), "Engineer")
-# print(e.name)
-# print(e.age)
-# print(e.salary)
+e = Employee.new_employee("Owen Gibson",date(1991,8,12), "Engineer", "Misinformation Media")   # This uses a class method to create a new instance of a class.
+print(f"Name:{e.name}")
+print(f"Age: {e.age}")
+print(f"Salary ${e.salary}")
+print(f"Project {e.project}")
 
-print(employee1_project.__repr__)
+print(employee1_project.__repr__) # function that can be called with eval() function to create another instance of a class. I am not doing that here tho obviously. 
 
