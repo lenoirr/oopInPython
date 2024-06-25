@@ -1,2 +1,2 @@
-# OOP-in-Python
+# Object Oriented Programming in Python
 Examples of an OOP Structure in Python
